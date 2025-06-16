@@ -46,9 +46,9 @@ const store = MongoStore.create({
   },
   touchAfter: 24 * 3600,
 });
-store.on("error",()=>{
-  console.logg("Error in Mongo Session Store")
-})
+store.on("error", () => {
+  console.logg("Error in Mongo Session Store");
+});
 const sessionOptions = {
   store,
   secret: process.env.SECRET,
@@ -90,6 +90,9 @@ app.use((req, res, next) => {
 //   res.send(regU)
 // })
 // Routes
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
