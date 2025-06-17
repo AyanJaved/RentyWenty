@@ -53,9 +53,9 @@
   
   <div class="tax-toggle">
     <div class="form-check-reverse form-switch">
-      <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+      <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" checked>
       <label class="form-check-label" for="switchCheckDefault">
-        Display Total After Taxes <i style="font-style: italic;">&nbsp;&nbsp;+18% GST</i>
+        Display Taxes <i style="font-style: italic;">&nbsp;&nbsp;+18% GST</i>
       </label>
     </div>
   </div>
@@ -83,14 +83,10 @@
 
 <script>
   let taxSwitch = document.getElementById("switchCheckDefault");
-  taxSwitch.addEventListener("click",()=>{
+  taxSwitch.addEventListener("change",()=>{
     let taxInfo = document.getElementsByClassName("tax-info")
     for(info of taxInfo){
-      if(info.style.display != "inline"){
-        info.style.display = "inline";
-      }else{
-        info.style.display = "none";
-      }
+      info.style.display = taxSwitch.checked ? "inline" : "none";
     }
   })
 </script>
