@@ -1,112 +1,171 @@
 <style>
+  /* === THEME COLORS === */
+  :root {
+    --primary-color: #2c7a7b;
+    --primary-dark: #285e61;
+    --secondary-color: #f6ad55;
+    --text-color: #2d3748;
+    --light-bg: #f9fafb;
+    --white: #ffffff;
+  }
+
+  /* === NAVBAR === */
+  .navbar {
+    background-color: var(--light-bg);
+    border-bottom: 2px solid var(--primary-color);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    padding: 0.6rem 1rem;
+    position: relative;
+    z-index: 10;
+  }
+
+  .navbar-brand {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .navbar-brand i {
+    color: var(--secondary-color);
+  }
+
+  .navbar-brand:hover {
+    color: var(--primary-dark);
+  }
+
+  .nav-link {
+    color: var(--text-color);
+    font-weight: 500;
+    margin-right: 1rem;
+    transition: color 0.3s ease;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--primary-color);
+  }
+
+  /* === SEARCH BAR (CENTERED) === */
+  .navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .search-bar input {
     border-radius: 2rem;
-    padding: 0.5rem 1rem;
-    border: 1px solid #dc3545;
-    min-width: 200px;
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--primary-color);
+    min-width: 280px;
+    outline: none;
+    transition: box-shadow 0.3s ease;
   }
 
   .search-bar input:focus {
-    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-    border-color: #dc3545;
+    box-shadow: 0 0 0 0.15rem rgba(44, 122, 123, 0.25);
   }
 
   .search-bar button {
     border-radius: 2rem;
-    padding: 0.5rem 1rem;
-    background-color: #dc3545;
-    border-color: #dc3545;
+    padding: 0.45rem 1rem;
+    background-color: var(--primary-color);
+    border: none;
     color: white;
     transition: background-color 0.3s ease;
-    white-space: nowrap;
   }
-  .navbar-collapse {
-    background-color: #f8f9fa;
-    border-radius: 0.375rem;
-    margin-top: 0.5rem;
-    padding: 1rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  }
+
   .search-bar button:hover {
-    background-color: #c82333;
+    background-color: var(--primary-dark);
   }
-  /* Mobile-specific adjustments */
-  @media (max-width: 767.98px) {
-    .search-bar {
+
+  /* === TOGGLER ICON === */
+  .navbar-toggler {
+    border: 1px solid var(--primary-color);
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(44, 122, 123, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+
+  .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.15rem rgba(44, 122, 123, 0.25);
+  }
+
+  /* === COLLAPSED MENU BACKGROUND === */
+  @media (max-width: 991.98px) {
+    .navbar-collapse {
+      background-color: var(--white);
+      border-radius: 0.5rem;
+      margin-top: 0.5rem;
+      padding: 0.8rem 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .navbar-center {
+      position: static;
+      transform: none;
+      margin: 0.6rem 0;
       width: 100%;
-      margin: 0.5rem 0;
     }
 
     .search-bar input {
-      min-width: unset;
-      flex: 1;
-    }
-
-    .navbar-nav .nav-link {
-      padding: 0.5rem 1rem;
-      text-align: center;
-    }
-
-    /* Stack navbar items vertically on mobile */
-    .navbar-collapse .navbar-nav {
-      margin-bottom: 0.5rem;
-    }
-
-    .navbar-collapse .navbar-nav:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  /* Fix for very small screens */
-  @media (max-width: 575.98px) {
-    .search-bar input {
-      font-size: 14px;
+      width: 100%;
     }
 
     .nav-link {
-      font-size: 14px;
+      text-align: center;
+      padding: 0.6rem;
+      color: var(--primary-color);
     }
   }
 </style>
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+
+<nav class="navbar navbar-expand-lg sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/listings"
-      ><i class="fa-solid fa-compass"></i
-    ></a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNavAltMarkup"
-    >
+    <!-- Brand -->
+    <a class="navbar-brand" href="/listings">
+      <i class="fa-solid fa-compass"></i> RentyWenty
+    </a>
+
+    <!-- Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
+    <!-- Collapse Content -->
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link" href="/listings">Explore</a>
-      </div>
-      <div class="nacbar-nav ms-auto">
+      <!-- Center Search -->
+      <div class="navbar-center">
         <form class="d-flex search-bar" role="search">
-          <input
-            class="form-control me-2"
-            type="search"
-            placeholder="Search Destinations..."
-            aria-label="Search"
-          />
-          <button class="btn btn-danger" type="submit">
+          <input class="form-control me-2" type="search" placeholder="Search Destinations..." aria-label="Search" />
+          <button class="btn" type="submit">
             <i class="fas fa-search"></i>
           </button>
         </form>
       </div>
-      <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="/listings/new">Add new Listings</a>
 
-        <% if(!currUser){%>
-        <a class="nav-link" href="/signup"><b>SignUp</b></a>
-        <a class="nav-link" href="/login"><b>Login</b></a>
-        <%}%> <% if(currUser){%>
-        <a class="nav-link" href="/logout"><b>Logout</b></a>
-        <%}%>
+      <!-- Right Nav -->
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/listings/new">Add New Listing</a>
+
+        <% if (!currUser) { %>
+          <a class="nav-link" href="/signup"><b>Sign Up</b></a>
+          <a class="nav-link" href="/login"><b>Login</b></a>
+          <% } else { %>
+            <a class="nav-link" href="/logout"><b>Logout</b></a>
+            <% } %>
       </div>
     </div>
   </div>

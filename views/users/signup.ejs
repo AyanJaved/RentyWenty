@@ -1,40 +1,35 @@
 <% layout("/layouts/boilerplate") %>
-<h1 class="col-6 offset-3">SignUp on RentyWenty</h1>
-<div class="row mt-3">
-  <div class="col-6 offset-3">
-    <form action="/signup" method="POST" class="needs-validation" novalidate>
+
+  <div class="signup-container">
+    <div class="signup-card shadow-sm p-4 rounded-4">
+      <h2 class="text-center mb-4 fw-semibold text-dark">Create Your Account 🏠</h2>
+
+      <form action="/signup" method="POST" class="needs-validation" novalidate>
         <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input
-              name="username"
-              id="username"
-              type="text"
-              class="form-control"
-              required
-            />
-            <div class="valid-feedback">Looks Good!</div>
-          </div>
-          <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input
-              name="email"
-              id="email"
-              type="email"
-              class="form-control"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input
-              name="password"
-              id="password"
-              type="password"
-              class="form-control"
-              required
-            />
-          </div>
-          <button class="btn btn-success">SignUp</button>
-    </form>
+          <label for="username" class="form-label fw-medium">Username</label>
+          <input name="username" id="username" type="text" class="form-control form-control-lg"
+            placeholder="Enter your username" required />
+          <div class="valid-feedback">Looks good!</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label fw-medium">Email</label>
+          <input name="email" id="email" type="email" class="form-control form-control-lg"
+            placeholder="Enter your email" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label fw-medium">Password</label>
+          <input name="password" id="password" type="password" class="form-control form-control-lg"
+            placeholder="Enter your password" required />
+        </div>
+
+        <button class="btn btn-signup w-100 py-2 mt-2" type="submit">Sign Up</button>
+      </form>
+
+      <p class="text-center mt-3 mb-0 text-muted">
+        Already have an account?
+        <a href="/login" class="text-theme fw-semibold">Login</a>
+      </p>
+    </div>
   </div>
-</div>

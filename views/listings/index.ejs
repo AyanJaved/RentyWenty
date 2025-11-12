@@ -41,15 +41,60 @@
 
 
 <div id="filters">
-  <div class="filter"><div><i class="fa-solid fa-fire"></i></div><p>Trending</p></div>
-  <div class="filter"><div><i class="fa-solid fa-bed"></i></div><p>Rooms</p></div>
-  <div class="filter"><div><i class="fa-solid fa-mountain-city"></i></div><p>Iconic Cities</p></div>
-  <div class="filter"><div><i class="fa-solid fa-mountain-sun"></i></div><p>Mountains</p></div>
-  <div class="filter"><div><i class="fa-brands fa-fort-awesome"></i></div><p>Castles</p></div>
-  <div class="filter"><div><i class="fa-solid fa-person-swimming"></i></div><p>Amazing Pools</p></div>
-  <div class="filter"><div><i class="fa-solid fa-campground"></i></div><p>Camping</p></div>
-  <div class="filter"><div><i class="fa-solid fa-cow"></i></div><p>Farms</p></div>
-  <div class="filter"><div><i class="fa-solid fa-umbrella-beach"></i></div><p>Beach</p></div>
+  <!-- 1. Popular Listings -->
+  <div class="filter">
+    <div><i class="fa-solid fa-fire"></i></div>
+    <p>Trending</p>
+  </div>
+
+  <!-- 2. Affordable / Budget stays -->
+  <div class="filter">
+    <div><i class="fa-solid fa-wallet"></i></div>
+    <p>Budget Stays</p>
+  </div>
+
+  <!-- 3. Premium / Luxury stays -->
+  <div class="filter">
+    <div><i class="fa-solid fa-gem"></i></div>
+    <p>Luxury</p>
+  </div>
+
+  <!-- 4. Rooms for rent -->
+  <div class="filter">
+    <div><i class="fa-solid fa-bed"></i></div>
+    <p>Rooms</p>
+  </div>
+
+  <!-- 5. Entire apartments / villas -->
+  <div class="filter">
+    <div><i class="fa-solid fa-house-chimney"></i></div>
+    <p>Apartments</p>
+  </div>
+
+  <!-- 6. Family-friendly stays -->
+  <div class="filter">
+    <div><i class="fa-solid fa-people-roof"></i></div>
+    <p>Family</p>
+  </div>
+
+  <!-- 7. Pet-friendly listings -->
+  <div class="filter">
+    <div><i class="fa-solid fa-paw"></i></div>
+    <p>Pet Friendly</p>
+  </div>
+
+  <!-- 8. Near tourist attractions -->
+  <div class="filter">
+    <div><i class="fa-solid fa-landmark"></i></div>
+    <p>Tourist Spots</p>
+  </div>
+
+  <!-- 9. Long-term stays -->
+  <div class="filter">
+    <div><i class="fa-solid fa-calendar-days"></i></div>
+    <p>Monthly Stays</p>
+  </div>
+
   
   <div class="tax-toggle">
     <div class="form-check-reverse form-switch">
@@ -73,7 +118,7 @@
       />
       <div class="card-img-overlay"></div>
       <div class="card-body">
-        <p class="card-text"><b><%= listing.title %></b><br/>  &#8377 <%= listing.price.toLocaleString("en-IN") %> / per week
+        <p class="card-text"><b><%= listing.title %></b><br/>  &#8377 <%= listing.price.toLocaleString("en-IN") %> Monthly
           <i class="tax-info"> &nbsp; &nbsp;+18% GST</i>
         </p>
       </div>

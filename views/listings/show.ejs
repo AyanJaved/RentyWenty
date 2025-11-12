@@ -7,20 +7,21 @@
     <img src="<%=listing.image.url%>" class="card-img-top show-img" alt="Listing_image">
     <div class="card-body">
       <p> <i>Owned By <%= listing.owner.username %></i></p>
+      <h5>Description : </h5>
       <p> <%= listing.description %></p>
-      <p> &#8377 <%= listing.price.toLocaleString("en-IN") %></p>
-      <p> <%= listing.location %></p>
-      <p><%= listing.country %></p>
+      <p> <b>Price :</b> &#8377 <%= listing.price.toLocaleString("en-IN") %> per Month</p>
+      <p><b>Address : </b><%= listing.location %></p>
+      <p><b>Country : </b><%= listing.country %></p>
     </div>
   </div>
-  <% if(currUser && currUser._id.equals(listing.owner._id)){%>
-  <div class="btns">
-    <a  class="btn btn-dark add-btn col-1 offset-3"href="/listings/<%= listing.id%>/edit">Edit</a>
-    <form action="/listings/<%=listing.id%>?_method=DELETE" method="POST">
-      <button class="btn btn-dark add-btn offset-5">Delete</button>
-    </form>
-  <%}%>
-  </div>
+  <% if(currUser && currUser._id.equals(listing.owner._id)){ %>
+    <div class="d-flex justify-content-center gap-3 mt-3 mb-3">
+      <a href="/listings/<%= listing.id %>/edit" class="btn btn-theme px-4">Edit</a>
+      <form action="/listings/<%= listing.id %>?_method=DELETE" method="POST" class="d-inline">
+        <button class="btn btn-theme px-4">Delete</button>
+      </form>
+    </div>
+    <% } %>
   <hr>
   <div class="col-8 offset-3 mb-3">
     <% if(currUser){%>
@@ -69,7 +70,8 @@
           <% if(currUser && review.author._id.equals(currUser._id)) { %>
           <form class="mb-3" method="POST" action="/listings/<%=listing._id%>/reviews/<%= review._id%>?_method=DELETE">
 
-            <button class="btn btn-sm btn-dark ">Delete</button>
+            <button class="btn btn-sm btn-theme">Delete</button>
+
           </form>
           <% } %>
         </div>
