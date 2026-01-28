@@ -148,8 +148,9 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <!-- Center Search -->
       <div class="navbar-center">
-        <form class="d-flex search-bar" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search Destinations..." aria-label="Search" />
+        <form class="d-flex search-bar" role="search" action="/listings" method="GET">
+          <input class="form-control me-2" type="search" name="search" placeholder="Search Destinations..."
+            aria-label="Search" value="<%= search || '' %>" />
           <button class="btn" type="submit">
             <i class="fas fa-search"></i>
           </button>

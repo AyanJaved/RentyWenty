@@ -59,3 +59,27 @@ module.exports.deleteListing = async (req, res) => {
   req.flash("success", "Listing Deleted!");
   res.redirect("/listings");
 };
+// search bar logic
+// Escape regex to prevent special character issues
+function escapeRegex(text) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+module.exports.index = async (req, res) => {
+    const { search } = req.query;
+
+    let query = {};
+
+    // Search logic
+    if (search && search.trim() !== "") {
+        const safeSearch = escapeRegex(search.trim());
+        const regex = new RegExp(safeSearch, "i");
+        query.$or = [
+            { title: regex },
+            { location: regex },
+            { country: regex }
+        ];
+    }
+    const listings = await Listing.find(query)
+        .populate("owner");
+    res.render("listings/index", { listings, search });
+};

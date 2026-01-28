@@ -60,6 +60,12 @@ const sessionOptions = {
     httpOnly: true, //cross scripting attack safety
   },
 };
+//searchBar
+app.use((req, res, next) => {
+  res.locals.search = req.query.search || "";
+  next();
+});
+
 // app.get("/", (req, res) => {
 //   res.send("Hi I'm Root");
 // });
