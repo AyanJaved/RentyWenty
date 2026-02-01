@@ -1,13 +1,23 @@
 <% if (success && success.length) { %>
-  <div class="alert alert-success alert-dismissible fade show mx-auto mt-3 col-md-6 text-center" role="alert">
+  <div class="alert alert-success alert-dismissible fade show mx-auto mt-3 col-md-6 text-center" style="max-width: 600px;" role="alert">
     <%= success %>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   <% } %>
 
     <% if (error && error.length) { %>
-      <div class="alert alert-danger alert-dismissible fade show mx-auto mt-3 col-md-6 text-center" role="alert">
+      <div class="alert alert-danger alert-dismissible fade show mx-auto mt-3 col-md-6 text-center" style="max-width: 600px;" role="alert">
         <%= error %>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
       <% } %>
+<script>
+  // Auto-dismiss alerts after 5 seconds
+  setTimeout(() => {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+      const bsAlert = new bootstrap.Alert(alert);
+      bsAlert.close();
+    });
+  }, 5000);
+</script>

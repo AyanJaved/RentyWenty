@@ -1,11 +1,8 @@
 /* ===== Global Styles ===== */
 :root {
   --primary: #2c7a7b;
-  /* Teal */
   --primary-dark: #285e61;
-  /* Darker Teal */
   --accent: #38b2ac;
-  /* Soft Teal accent */
   --bg: #f8f9fa;
   --surface: #ffffff;
   --text: #222222;
@@ -25,65 +22,18 @@ body {
 
 .container {
   flex: 1;
+  padding-bottom: 2rem;
 }
-
-/* ===== Navbar ===== */
-.navbar {
-  height: 5rem;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow);
-}
-
-.fa-compass {
+/* ===== Links ===== */
+a {
   color: var(--primary);
-  font-size: 2rem;
-}
-
-.nav-link {
-  color: var(--text) !important;
-  transition: color 0.2s ease;
-}
-
-.nav-link:hover {
-  color: var(--primary) !important;
-}
-
-/* ===== Footer ===== */
-.f-info {
-  text-align: center;
-  background: var(--bg);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  padding: 1.2rem;
-  gap: 0.6rem;
-  border-top: 1px solid var(--border);
-}
-
-.f-info-links a {
   text-decoration: none;
-  color: var(--text-muted);
-  margin: 0 0.5rem;
   transition: color 0.2s ease;
 }
 
-.f-info-links a:hover {
-  color: var(--primary);
+a:hover {
+  color: var(--primary-dark);
 }
-
-.f-info-socials i {
-  font-size: 1.2rem;
-  margin: 0 0.8rem;
-  color: var(--text-muted);
-  transition: color 0.3s ease;
-}
-
-.f-info-socials i:hover {
-  color: var(--primary);
-}
-
 /* ===== Cards ===== */
 .listing-card {
   border: none !important;
@@ -92,13 +42,17 @@ body {
   border-radius: 0.75rem;
   box-shadow: var(--shadow);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
 }
 
 .listing-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
 }
-
+.listing-card:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
 .card-img-top {
   border-radius: 0.75rem 0.75rem 0 0;
   width: 100%;
@@ -116,6 +70,20 @@ body {
   font-weight: 600;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
+.btn-login:hover,
+.add-btn:hover,
+.btn-signup:hover {
+  background-color: var(--primary-dark) !important;
+  transform: scale(1.02);
+}
+.btn-login:focus,
+.add-btn:focus,
+.btn-signup:focus,
+.btn-theme:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 0.2rem rgba(44, 122, 123, 0.25) !important;
+}
 /* Theme button (teal color) */
 .btn-theme {
   background-color: #2b7a78 !important;
@@ -125,17 +93,11 @@ body {
   border-radius: 6px;
   padding: 8px 20px;
 }
-
 .btn-theme:hover {
   background-color: #226c68 !important;
   color: #fff !important;
 }
-.btn-login:hover,
-.add-btn:hover,
-.btn-signup:hover {
-  background-color: var(--primary-dark) !important;
-  transform: scale(1.02);
-}
+
 
 /* ===== Login Page ===== */
 .login-container {
@@ -220,15 +182,53 @@ body {
   max-width: 600px;
   margin: 1rem auto;
 }
+/* ===== Utility Classes ===== */
+.text-primary {
+  color: var(--primary) !important;
+}
 
+.shadow-sm {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-md {
+  box-shadow: var(--shadow);
+}
+
+.shadow-lg {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
 /* ===== Responsive ===== */
-@media (max-width: 768px) {
-  .f-info {
-    flex-direction: column;
-    gap: 0.4rem;
+@media (max-width: 576px) {
+
+  .login-container,
+  .signup-container {
+    padding: 1rem;
   }
 
+  .login-card,
+  .signup-card {
+    max-width: 100%;
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
   .card-img-top {
     height: 180px;
+  }
+
+  .listing-card {
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .card-img-top {
+    height: 220px;
   }
 }

@@ -23,4 +23,8 @@ router.route("/login").get( wrapAsync(userController.renderLoginForm)).post(
 );
 // logout
 router.get("/logout", userController.logout);
+// legal pages
+router.get("/legal", (req, res) => {
+  res.render("includes/legal.ejs");
+});
 module.exports = router;

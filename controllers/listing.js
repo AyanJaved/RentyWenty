@@ -20,7 +20,12 @@ module.exports.showListing = async (req, res) => {
 module.exports.createListing = async (req, res) => {
   let url = req.file.path;
   let filename = req.file.filename;
-
+if (
+    req.body.listing.category &&
+    typeof req.body.listing.category === "string"
+  ) {
+    req.body.listing.category = [req.body.listing.category];
+  }
   const newListing = new Listing(req.body.listing);
   newListing.owner = req.user._id;
   newListing.image = { url, filename };
@@ -41,7 +46,13 @@ module.exports.editListing = async (req, res) => {
 };
 module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
-  let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  if (
+    req.body.listing.category &&
+    typeof req.body.listing.category === "string"
+  ) {
+    req.body.listing.category = [req.body.listing.category];
+  }
+  let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { new: true, runValidators: true });
   if (typeof req.file !== "undefined") {
     let url = req.file.path;
     let filename = req.file.filename;
@@ -59,27 +70,43 @@ module.exports.deleteListing = async (req, res) => {
   req.flash("success", "Listing Deleted!");
   res.redirect("/listings");
 };
-// search bar logic
-// Escape regex to prevent special character issues
+// serch 
 function escapeRegex(text) {
-    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  // Escape regex to prevent special character issues
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
+
 module.exports.index = async (req, res) => {
-    const { search } = req.query;
+  const { search, category } = req.query;
 
-    let query = {};
+  let query = {};
 
-    // Search logic
-    if (search && search.trim() !== "") {
-        const safeSearch = escapeRegex(search.trim());
-        const regex = new RegExp(safeSearch, "i");
-        query.$or = [
-            { title: regex },
-            { location: regex },
-            { country: regex }
-        ];
-    }
-    const listings = await Listing.find(query)
-        .populate("owner");
-    res.render("listings/index", { listings, search });
+  /* APPLY CATEGORY ONLY IF PROVIDED */
+  if (typeof category === "string" && category.trim().length > 0) {
+    query.category = { $in: [category.trim()] };
+  }
+
+  /* APPLY SEARCH ONLY IF PROVIDED */
+  if (typeof search === "string" && search.trim().length > 0) {
+    const safeSearch = escapeRegex(search.trim());
+    const regex = new RegExp(safeSearch, "i");
+
+    query.$or = [
+      { title: regex },
+      { location: regex },
+      { country: regex }
+    ];
+  }
+
+  /* IF NO FILTERS → query = {} → returns all listings */
+  const listings = await Listing.find(query).populate("owner");
+
+  res.render("listings/index", {
+    listings,
+    search: search || "",
+    category: category || ""
+  });
 };
+
+
+

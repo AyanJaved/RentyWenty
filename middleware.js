@@ -21,6 +21,10 @@ module.exports.saveRedirectUrl = (req, res, next) => {
 module.exports.isOwner = async (req, res, next) => {
   let { id } = req.params;
   let listing = await Listing.findById(id);
+  if (!listing) {
+    req.flash("error", "Listing not found");
+    return res.redirect("/listings");
+  }
   if (!listing.owner._id.equals(res.locals.currUser._id)) {
     req.flash("error", "You don't have permission to Perform this action");
     return res.redirect(`/listings/${id}`);
@@ -29,6 +33,16 @@ module.exports.isOwner = async (req, res, next) => {
 };
 // validating schema JOI
 module.exports.validateListing = (req, res, next) => {
+   // NORMALIZE CATEGORY FIRST
+  if (req.body.listing?.category) {
+    // single checkbox selected → string
+    if (typeof req.body.listing.category === "string") {
+      req.body.listing.category = [req.body.listing.category];
+    }
+  } else {
+    // no category selected
+    req.body.listing.category = [];
+  }
   let { error } = listingSchema.validate(req.body);
   if (error) {
     let errMsg = error.details.map((el) => el.message).join(",");
@@ -37,7 +51,7 @@ module.exports.validateListing = (req, res, next) => {
     next();
   }
 };
-// valtidating review
+// validating review
 module.exports.validateReview = (req, res, next) => {
   let { error } = reviewSchema.validate(req.body);
   if (error) {

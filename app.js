@@ -47,7 +47,7 @@ const store = MongoStore.create({
   touchAfter: 24 * 3600,
 });
 store.on("error", () => {
-  console.logg("Error in Mongo Session Store");
+  console.log("Error in Mongo Session Store");
 });
 const sessionOptions = {
   store,
@@ -58,6 +58,7 @@ const sessionOptions = {
     expires: Date.now() + 7 * 24 * 1000 * 60 * 60,
     maxAge: 7 * 24 * 1000 * 60 * 60,
     httpOnly: true, //cross scripting attack safety
+    secure: process.env.NODE_ENV === "production",
   },
 };
 //searchBar
@@ -65,11 +66,6 @@ app.use((req, res, next) => {
   res.locals.search = req.query.search || "";
   next();
 });
-
-// app.get("/", (req, res) => {
-//   res.send("Hi I'm Root");
-// });
-
 // session and authentication
 app.use(session(sessionOptions));
 app.use(flash()); //always use it before routes
@@ -85,16 +81,11 @@ app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.user; //used in navbar for logged in info
+  res.locals.search = req.query.search || "";
+  res.locals.path = req.path;
   next();
 });
-// app.get("/user",async (req,res)=>{
-//   let fakeUser = new User({
-//     email:"fake@mail.com",
-//     username:"fakeHoonVai"
-//   })
-//   let regU = await User.register(fakeUser,"helloG");
-//   res.send(regU)
-// })
+
 // Routes
 app.get("/", (req, res) => {
   res.redirect("/listings");
@@ -102,18 +93,6 @@ app.get("/", (req, res) => {
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
-// app.get("/testingListing", async (req, res) => {
-//   let sampleListing = new Listing({
-//     title: "My new Villa",
-//     description: "By the beach",
-//     price: 1200,
-//     location: "Calangute,goa",
-//     country: "India",
-//   });
-//   await sampleListing.save();
-//   console.log("sample was saved");
-//   res.send("Successful Testing");
-// });
 // middleWare
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));

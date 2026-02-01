@@ -3,12 +3,14 @@ const Schema = mongoose.Schema;
 const Review = require("./review.js");
 const listingSchema = new Schema({
   title: {
-    required: true,
     type: String,
+    required: true,
+    maxlength: 100
   },
   description: {
-    required: true,
     type: String,
+    required: true,
+    maxlength: 3500
   },
   image: {
     filename: {
@@ -26,16 +28,17 @@ const listingSchema = new Schema({
     },
   },
   price: {
-    required: true,
     type: Number,
+    required: true,
+    min: 0
   },
   location: {
-    required: true,
     type: String,
+    required: true,
   },
   country: {
-    required: true,
     type: String,
+    required: true,
   },
   reviews: [
     {
@@ -45,8 +48,25 @@ const listingSchema = new Schema({
   ],
   owner:{
     type: Schema.Types.ObjectId,
-    ref:"User",
-  }
+    ref: "User",
+    required: true,
+  },
+  category: {
+    type: [String],
+    default: [],
+    enum: [  
+    "Trending",
+    "Budget Stays",
+    "Luxury",
+    "Rooms",
+    "Apartments",
+    "Family",
+    "Pet Friendly",
+    "Tourist Spots",
+    "Monthly Stays"
+  ]
+
+}
 });
 listingSchema.post("findOneAndDelete", async (listing) => {
   if (listing) {
