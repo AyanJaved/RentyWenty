@@ -66,11 +66,11 @@ module.exports.updateListing = async (req, res) => {
 module.exports.deleteListing = async (req, res) => {
   let { id } = req.params;
   let deletedListing = await Listing.findByIdAndDelete(id);
-  console.log(deletedListing);
+  // console.log(deletedListing);
   req.flash("success", "Listing Deleted!");
   res.redirect("/listings");
 };
-// serch 
+// search 
 function escapeRegex(text) {
   // Escape regex to prevent special character issues
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

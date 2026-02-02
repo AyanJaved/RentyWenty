@@ -54,28 +54,31 @@
           <div class="invalid-feedback">Location should be valid</div>
         </div>
 <div class="mb-3">
-  <label class="form-label">Category</label>
-  <select name="listing[category]" class="form-select" required>
-    
-    <option value="">Select Category</option>
-    <option value="Trending">Trending</option>
-    <option value="Budget Stays">Budget Stays</option>
-    <option value="Luxury">Luxury</option>
-    <option value="Rooms">Rooms</option>
-    <option value="Apartments">Apartments</option>
-    <option value="Family">Family</option>
-    <option value="Pet Friendly">Pet Friendly</option>
-    <option value="Tourist Spots">Tourist Spots</option>
-    <option value="Monthly Stays">Monthly Stays</option>
+  <label class="form-label">Category (Hold Ctrl/Cmd to select multiple)</label>
+  <select name="listing[category]" class="form-select" multiple size="9" required>
+    <option value="Trending" <%=listing.category && listing.category.includes('Trending') ? 'selected' : '' %>>Trending
+    </option>
+    <option value="Budget Stays" <%=listing.category && listing.category.includes('Budget Stays') ? 'selected' : '' %>
+      >Budget Stays</option>
+    <option value="Luxury" <%=listing.category && listing.category.includes('Luxury') ? 'selected' : '' %>>Luxury</option>
+    <option value="Rooms" <%=listing.category && listing.category.includes('Rooms') ? 'selected' : '' %>>Rooms</option>
+    <option value="Apartments" <%=listing.category && listing.category.includes('Apartments') ? 'selected' : '' %>
+      >Apartments</option>
+    <option value="Family" <%=listing.category && listing.category.includes('Family') ? 'selected' : '' %>>Family</option>
+    <option value="Pet Friendly" <%=listing.category && listing.category.includes('Pet Friendly') ? 'selected' : '' %>>Pet
+      Friendly</option>
+    <option value="Tourist Spots" <%=listing.category && listing.category.includes('Tourist Spots') ? 'selected' : '' %>
+      >Tourist Spots</option>
+    <option value="Monthly Stays" <%=listing.category && listing.category.includes('Monthly Stays') ? 'selected' : '' %>
+      >Monthly Stays</option>
   </select>
+  <div class="invalid-feedback">Please select a category</div>
 </div>
-        <!-- ✅ Teal Themed Edit Button -->
         <button class="btn btn-teal mt-3 px-4">Edit</button>
       </form>
     </div>
   </div>
 
-  <!-- === Custom Button Style === -->
   <style>
     .btn-teal {
       background-color: #2c7a7b;
