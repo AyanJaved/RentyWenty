@@ -1,23 +1,28 @@
 <% if (success && success.length) { %>
-  <div class="alert alert-success alert-dismissible fade show mx-auto mt-3 col-md-6 text-center" style="max-width: 600px;" role="alert">
+  <div class="alert alert-success alert-dismissible fade show mx-auto mt-3 text-center" style="max-width: 600px;"
+    role="alert">
+    <i class="fas fa-check-circle"></i>
     <%= success %>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   <% } %>
 
     <% if (error && error.length) { %>
-      <div class="alert alert-danger alert-dismissible fade show mx-auto mt-3 col-md-6 text-center" style="max-width: 600px;" role="alert">
+      <div class="alert alert-danger alert-dismissible fade show mx-auto mt-3 text-center" style="max-width: 600px;"
+        role="alert">
+        <i class="fas fa-exclamation-triangle"></i>
         <%= error %>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
       <% } %>
-<script>
-  // Auto-dismiss alerts after 5 seconds
-  setTimeout(() => {
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-      const bsAlert = new bootstrap.Alert(alert);
-      bsAlert.close();
-    });
-  }, 5000);
-</script>
+
+        <script>
+          // Auto-dismiss alerts after 5 seconds
+          setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+              const bsAlert = new bootstrap.Alert(alert);
+              bsAlert.close();
+            });
+          }, 5000);
+        </script>

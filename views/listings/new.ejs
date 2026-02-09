@@ -1,86 +1,155 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="row mt-3">
-  <div class="col-8 offset-2">
-    <h3>Create a New Listing</h3>
-    <form
-      method="POST"
-      action="/listings"
-      novalidate
-      class="needs-validation"
-      enctype="multipart/form-data"
-    >
-      <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        <input
-          name="listing[title]"
-          placeholder="Your Catchy Title goes here"
-          type="text"
-          class="form-control"
-          required
-        />
-        <div class="valid-feedback">Title Looks Good!</div>
-      </div>
-      <label for="description" class="form-label">Description</label>
-      <div class="mb-3">
-        <textarea
-          name="listing[description]"
-          placeholder="Description here"
-          class="form-control"
-          type="text"
-          required
-        ></textarea>
-        <div class="invalid-feedback">Please enter a short Description</div>
-      </div>
-      <div class="mb-3">
-        <label for="image" class="form-label">Upload Image </label>
+  <style>
+    .create-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: var(--surface);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: var(--shadow);
+    }
 
-        <input name="listing[image]" type="file" class="form-control" required />
+    .create-header {
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .btn-create {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-weight: 600;
+      padding: 0.6rem 2rem;
+    }
+
+    .btn-create:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      color: white;
+    }
+
+    .btn-create:active {
+      transform: translateY(0);
+    }
+
+    .category-select {
+      min-height: 120px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-start;
+      margin-top: 2rem;
+    }
+
+    .image-requirements {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .create-container {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .form-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+
+  <div class="create-container">
+    <h3 class="create-header">
+      <i class="fas fa-plus-circle"></i> Create a New Listing
+    </h3>
+
+    <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
+
+      <!-- Title -->
+      <div class="mb-3">
+        <label for="title" class="form-label">
+          <i class="fas fa-heading"></i> Title <span class="text-danger">*</span>
+        </label>
+        <input id="title" name="listing[title]" type="text" class="form-control"
+          placeholder="Your catchy title goes here" maxlength="100" required />
+        <div class="valid-feedback">Title looks good!</div>
+        <div class="invalid-feedback">Please enter a valid title (max 100 characters)</div>
       </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label for="description" class="form-label">
+          <i class="fas fa-align-left"></i> Description <span class="text-danger">*</span>
+        </label>
+        <textarea id="description" name="listing[description]" class="form-control" rows="5"
+          placeholder="Describe your property in detail" maxlength="3500" required></textarea>
+        <small class="text-muted">Maximum 3500 characters</small>
+        <div class="invalid-feedback">Please enter a description</div>
+      </div>
+
+      <!-- Upload Image -->
+      <div class="mb-3">
+        <label for="image" class="form-label">
+          <i class="fas fa-upload"></i> Upload Image <span class="text-danger">*</span>
+        </label>
+        <input id="image" name="listing[image]" type="file" class="form-control"
+          accept="image/jpeg,image/png,image/webp,image/jpg" required />
+        <small class="image-requirements">Accepted: JPG, PNG, WEBP (Max 5MB)</small>
+        <div class="invalid-feedback">Please upload an image</div>
+      </div>
+
+      <!-- Price & Country Row -->
       <div class="row">
         <div class="mb-3 col-md-4">
-          <label for="price" class="form-label">Price</label>
-
-          <input
-            class="form-control"
-            name="listing[price]"
-            placeholder="1200"
-            type="text"
-            required
-          />
-          <div class="invalid-feedback">Enter a valid Price</div>
+          <label for="price" class="form-label">
+            <i class="fas fa-dollar-sign"></i> Price (per night) <span class="text-danger">*</span>
+          </label>
+          <input id="price" name="listing[price]" class="form-control" type="number" min="0" step="0.01"
+            placeholder="1200" required />
+          <div class="invalid-feedback">Enter a valid price</div>
         </div>
 
         <div class="mb-3 col-md-8">
-          <label for="country" class="form-label">Country</label>
-
-          <input
-            class="form-control"
-            name="listing[country]"
-            placeholder="India"
-            required
-            type="text"
-          />
-          <div class="invalid-feedback">Country name should be valid</div>
+          <label for="country" class="form-label">
+            <i class="fas fa-globe"></i> Country <span class="text-danger">*</span>
+          </label>
+          <input id="country" name="listing[country]" class="form-control" type="text" placeholder="e.g., India"
+            required />
+          <div class="invalid-feedback">Please enter a valid country name</div>
         </div>
       </div>
 
+      <!-- Location -->
       <div class="mb-3">
-        <label for="location" class="form-label">Location</label>
-
-        <input
-          name="listing[location]"
-          placeholder="Delhi, CP"
-          type="text"
-          required
-          class="form-control"
-        />
-        <div class="invalid-feedback">Location should be valid</div>
+        <label for="location" class="form-label">
+          <i class="fas fa-map-marker-alt"></i> Location <span class="text-danger">*</span>
+        </label>
+        <input id="location" name="listing[location]" type="text" class="form-control" placeholder="e.g., Delhi, CP"
+          required />
+        <div class="invalid-feedback">Please enter a valid location</div>
       </div>
+
+      <!-- Category -->
       <div class="mb-3">
-        <label class="form-label">Category</label>
-        <select name="listing[category]" class="form-select" required>
-          <option value="">Select Category</option>
+        <label for="category" class="form-label">
+          <i class="fas fa-tags"></i> Category <span class="text-danger">*</span>
+        </label>
+        <small class="d-block text-muted mb-2">
+          Hold <kbd>Ctrl</kbd> (Windows) or <kbd>Cmd</kbd> (Mac) to select multiple categories
+        </small>
+        <select id="category" name="listing[category]" class="form-select category-select" multiple required>
           <option value="Trending">Trending</option>
           <option value="Budget Stays">Budget Stays</option>
           <option value="Luxury">Luxury</option>
@@ -91,11 +160,17 @@
           <option value="Tourist Spots">Tourist Spots</option>
           <option value="Monthly Stays">Monthly Stays</option>
         </select>
+        <div class="invalid-feedback">Please select at least one category</div>
       </div>
 
-      <br /><br />
-      <button class="btn btn-dark add-btn">Add</button>
-      <br /><br />
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-create">
+          <i class="fas fa-plus"></i> Create Listing
+        </button>
+        <a href="/listings" class="btn btn-outline-secondary">
+          <i class="fas fa-times"></i> Cancel
+        </a>
+      </div>
     </form>
   </div>
-</div>

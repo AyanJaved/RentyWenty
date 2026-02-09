@@ -41,9 +41,9 @@ app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "public")));
 const store = MongoStore.create({
   mongoUrl: dbUrl,
-  crypto: {
-    secret: process.env.SECRET,
-  },
+  // crypto: {
+  //   secret: process.env.SECRET,
+  // },
   touchAfter: 24 * 3600,
 });
 store.on("error", () => {
@@ -53,7 +53,7 @@ const sessionOptions = {
   store,
   secret: process.env.SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     expires: Date.now() + 7 * 24 * 1000 * 60 * 60,
     maxAge: 7 * 24 * 1000 * 60 * 60,
@@ -99,6 +99,10 @@ app.use((req, res, next) => {
 });
 // Error Handeling middleware
 app.use((err, req, res, next) => {
+  console.error(err);
+  if (res.headersSent) {
+    return next(err);
+  }
   let { statusCode = 500, message = "Something went WRONG" } = err;
   res.status(statusCode).render("listings/error.ejs", { message });
 });
