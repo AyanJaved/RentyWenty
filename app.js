@@ -34,6 +34,7 @@ async function main() {
 //view engine setup
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.set("trust proxy", 1);
 //middleware setup
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(methodOverride("_method"));
@@ -58,6 +59,7 @@ const sessionOptions = {
     expires: Date.now() + 7 * 24 * 1000 * 60 * 60,
     maxAge: 7 * 24 * 1000 * 60 * 60,
     httpOnly: true, //cross scripting attack safety
+    sameSite: "none",
     secure: process.env.NODE_ENV === "production",
   },
 };
