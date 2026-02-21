@@ -1,156 +1,124 @@
 <% layout("/layouts/boilerplate") %>
-<style>
- #filters {
-  display: flex;
-  overflow-x: auto;
-  gap: 1rem;
-  padding: 1rem;
-  scrollbar-width: none; /* Firefox */
-}
-#filters::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
-}
-
-.filter {
-  text-align: center;
-  opacity: 0.7;
-  transition: opacity 0.3s;
-  min-width: 90px;
-  flex-shrink: 0;
-}
-.filter:hover {
-  opacity: 1;
-  cursor: pointer;
-}
-.filter p {
-  font-size: 0.8rem;
-  margin-top: 0.3rem;
-}
-
-.tax-toggle {
-  border: 1px solid #ccc;
-  border-radius: 1rem;
-  padding: 0.5rem 1rem;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-/* Filter links reset */
-#filters a.filter {
-  text-decoration: none;
-  color: inherit;
-}
-
-/* Remove visited purple */
-#filters a.filter:visited {
-  color: inherit;
-}
-
-/* Hover effect (nice UX) */
-#filters a.filter:hover {
-  color: #2c7a7b;
-  transform: scale(1.05);
-}
-
-/* Optional: make them feel clickable */
-#filters a.filter {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-</style>
-
+<div class="container">
+  
 <div id="filters">
+  <a href="/listings" class="filter <%= !category ? 'active' : '' %>">
+    <div><i class="fa-solid fa-th"></i></div>
+    <p>All</p>
+  </a>
 
-  <a href="/listings?search=<%= search %>&category=Trending" class="filter">
+  <a href="/listings?search=<%= search || '' %>&category=Trending"
+    class="filter <%= category === 'Trending' ? 'active' : '' %>">
     <div><i class="fa-solid fa-fire"></i></div>
     <p>Trending</p>
   </a>
 
-  <a href="/listings?search=<%= search %>&category=Budget Stays" class="filter">
+  <a href="/listings?search=<%= search || '' %>&category=Budget Stays"
+    class="filter <%= category === 'Budget Stays' ? 'active' : '' %>">
     <div><i class="fa-solid fa-wallet"></i></div>
     <p>Budget Stays</p>
   </a>
 
-  <a href="/listings?search=<%= search %>&category=Luxury" class="filter">
+  <a href="/listings?search=<%= search || '' %>&category=Luxury"
+    class="filter <%= category === 'Luxury' ? 'active' : '' %>">
     <div><i class="fa-solid fa-gem"></i></div>
     <p>Luxury</p>
   </a>
 
-  <a href="/listings?search=<%= search %>&category=Rooms" class="filter">
+  <a href="/listings?search=<%= search || '' %>&category=Rooms"
+    class="filter <%= category === 'Rooms' ? 'active' : '' %>">
     <div><i class="fa-solid fa-bed"></i></div>
     <p>Rooms</p>
   </a>
 
-  <a href="/listings?search=<%= search %>&category=Apartments" class="filter">
+  <a href="/listings?search=<%= search || '' %>&category=Apartments"
+    class="filter <%= category === 'Apartments' ? 'active' : '' %>">
     <div><i class="fa-solid fa-house-chimney"></i></div>
     <p>Apartments</p>
   </a>
 
-  <a href="/listings?search=<%= search %>&category=Family" class="filter">
+  <a href="/listings?search=<%= search || '' %>&category=Family"
+    class="filter <%= category === 'Family' ? 'active' : '' %>">
     <div><i class="fa-solid fa-people-roof"></i></div>
     <p>Family</p>
   </a>
 
-  <a href="/listings?search=<%= search %>&category=Pet Friendly" class="filter">
+  <a href="/listings?search=<%= search || '' %>&category=Pet Friendly"
+    class="filter <%= category === 'Pet Friendly' ? 'active' : '' %>">
     <div><i class="fa-solid fa-paw"></i></div>
     <p>Pet Friendly</p>
   </a>
 
-  <a href="/listings?search=<%= search %>&category=Tourist Spots" class="filter">
+  <a href="/listings?search=<%= search || '' %>&category=Tourist Spots"
+    class="filter <%= category === 'Tourist Spots' ? 'active' : '' %>">
     <div><i class="fa-solid fa-landmark"></i></div>
     <p>Tourist Spots</p>
   </a>
 
-  <a href="/listings?search=<%= search %>&category=Monthly Stays" class="filter">
+  <a href="/listings?search=<%= search || '' %>&category=Monthly Stays"
+    class="filter <%= category === 'Monthly Stays' ? 'active' : '' %>">
     <div><i class="fa-solid fa-calendar-days"></i></div>
     <p>Monthly Stays</p>
   </a>
-  <div class="tax-toggle">
-    <div class="form-check-reverse form-switch">
-      <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" checked>
-      <label class="form-check-label" for="switchCheckDefault">
-        Display Taxes <i style="font-style: italic;">&nbsp;&nbsp;+18% GST</i>
-      </label>
-    </div>
-  </div>
 </div>
 
-<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+<!-- Listings Grid -->
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
   <% if (listings.length===0) { %>
-    <div class="text-center mt-5">
-      <h5>No listings match your search.</h5>
-    </div>
-    <% } %>
-  <% for(let listing of listings ){ %>
-    <a class="listing-link" href="/listings/<%=listing.id%>" >
-    <div class="card col listing-card" >
-      <img
-        src="<%=listing.image.url%>"
-        class="card-img-top"
-        alt="listing_image"
-        style="height: 20rem;"
-      />
-      <div class="card-img-overlay"></div>
-      <div class="card-body">
-        <p class="card-text"><b><%= listing.title %></b><br/>  &#8377 <%= listing.price.toLocaleString("en-IN") %> Monthly
-          <i class="tax-info"> &nbsp; &nbsp;+18% GST</i>
+    <div class="col-12">
+      <div class="empty-state">
+        <i class="fas fa-search empty-state-icon"></i>
+        <h3 class="empty-state-title">No listings found</h3>
+        <p class="empty-state-text">
+          <% if (search) { %>
+            We couldn't find any properties matching "<%= search %>".
+              Try searching with different keywords.
+              <% } else if (category) { %>
+                No properties available in the "<%= category %>" category yet.
+                  Check back soon or browse other categories.
+                  <% } else { %>
+                    Be the first to list a property on RentyWenty!
+                    <% } %>
         </p>
+        <% if (currUser) { %>
+          <a href="/listings/new" class="btn btn-theme">
+            <i class="fas fa-plus"></i> Create Listing
+          </a>
+          <% } else { %>
+            <a href="/listings" class="btn btn-theme">
+              <i class="fas fa-home"></i> View All Listings
+            </a>
+            <% } %>
       </div>
     </div>
-  <%}%>
-</div>
+    <% } %>
 
-<script>
-  let taxSwitch = document.getElementById("switchCheckDefault");
-  taxSwitch.addEventListener("change",()=>{
-    let taxInfo = document.getElementsByClassName("tax-info")
-    for(info of taxInfo){
-      info.style.display = taxSwitch.checked ? "inline" : "none";
-    }
-  })
-</script>
+      <% for (let listing of listings) { %>
+        <div class="col">
+          <a class="listing-link" href="/listings/<%= listing.id %>">
+            <div class="card listing-card">
+              <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>" />
+              <div class="card-img-overlay"></div>
+
+              <div class="card-body">
+                <h5 class="card-title">
+                  <%= listing.title %>
+                </h5>
+
+                <div class="price-section">
+                  <!-- Only Monthly Price -->
+                  <div class="price-monthly">
+                    <div class="price-amount">
+                      <span>₹<%= Math.round(listing.price * 30).toLocaleString("en-IN") %></span>
+                      <span class="price-period">/month</span>
+                    </div>
+                    <span class="tax-info">+18% GST</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <% } %>
+</div>
+</div>

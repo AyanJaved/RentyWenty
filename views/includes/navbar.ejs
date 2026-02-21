@@ -1,5 +1,6 @@
 <nav class="navbar navbar-expand-lg sticky-top">
   <div class="container-fluid">
+
     <!-- Brand -->
     <a class="navbar-brand" href="/listings">
       <i class="fa-solid fa-compass"></i> RentyWenty
@@ -13,12 +14,13 @@
 
     <!-- Collapse Content -->
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
       <!-- Center Search -->
       <div class="navbar-center">
         <form class="d-flex search-bar" role="search" action="/listings" method="GET">
           <input class="form-control me-2" type="search" name="search" placeholder="Search Destinations..."
             aria-label="Search" value="<%= search || '' %>" />
-          <button class="btn" type="submit" aria-label="Search">
+          <button class="btn search-btn" type="submit" aria-label="Search">
             <i class="fas fa-search"></i>
           </button>
         </form>
@@ -26,39 +28,86 @@
 
       <!-- Right Nav -->
       <div class="navbar-nav ms-auto">
+
         <a class="nav-link <%= typeof path !== 'undefined' && path.startsWith('/listings/new') ? 'active' : '' %>"
           href="/listings/new">
           <i class="fas fa-plus-circle"></i> Add New Listing
         </a>
 
+        <!-- Dark Mode Toggle -->
+        <div class="nav-item d-flex align-items-center">
+          <label class="dark-mode-label d-flex align-items-center gap-2 mb-0">
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" role="switch" id="navDarkModeToggle" />
+            </div>
+            <i class="fas fa-moon"></i>
+          </label>
+        </div>
+
         <% if (!currUser) { %>
+
           <a class="nav-link <%= typeof path !== 'undefined' && path === '/signup' ? 'active' : '' %>" href="/signup">
             <b>Sign Up</b>
           </a>
+
           <a class="nav-link <%= typeof path !== 'undefined' && path === '/login' ? 'active' : '' %>" href="/login">
             <b>Login</b>
           </a>
+
           <% } else { %>
+
             <div class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                 aria-expanded="false">
                 <i class="fas fa-user-circle"></i>
                 <%= currUser.username %>
               </a>
+
               <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="/listings?owner=<%= currUser._id %>">
-                    <i class="fas fa-list"></i> My Listings
-                  </a></li>
                 <li>
-                  <hr class="dropdown-divider">
+                  <a class="dropdown-item" href="/listings?owner=<%= currUser._id %>">
+                    <i class="fas fa-list"></i> My Listings
+                  </a>
                 </li>
-                <li><a class="dropdown-item" href="/logout">
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/logout">
                     <i class="fas fa-sign-out-alt"></i> Logout
-                  </a></li>
+                  </a>
+                </li>
               </ul>
             </div>
+
             <% } %>
+
       </div>
     </div>
   </div>
 </nav>
+
+<script>
+  const navToggle = document.getElementById("navDarkModeToggle");
+
+  // Check for saved dark mode preference
+  const darkMode = localStorage.getItem("darkMode");
+
+  if (darkMode === "enabled") {
+    document.body.classList.add("dark-mode");
+    if (navToggle) navToggle.checked = true;
+  }
+
+  // Toggle dark mode
+  if (navToggle) {
+    navToggle.addEventListener("change", () => {
+      if (navToggle.checked) {
+        document.body.classList.add("dark-mode");
+        localStorage.setItem("darkMode", "enabled");
+      } else {
+        document.body.classList.remove("dark-mode");
+        localStorage.setItem("darkMode", "disabled");
+      }
+    });
+  }
+</script>

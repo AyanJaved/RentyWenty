@@ -1,4 +1,7 @@
-/* ===== Global Styles ===== */
+/* ========================================
+   ROOT TOKENS
+======================================== */
+
 :root {
   --primary: #2c7a7b;
   --primary-dark: #285e61;
@@ -9,6 +12,15 @@
   --text-muted: #6c757d;
   --border: #e5e5e5;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --danger: #e53e3e;
+}
+
+/* ========================================
+   BASE
+======================================== */
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -17,14 +29,21 @@ body {
   min-height: 100vh;
   background-color: var(--bg);
   color: var(--text);
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* Page wrapper */
 
 .container {
   flex: 1;
   padding-bottom: 2rem;
 }
-/* ===== Links ===== */
+
+/* ========================================
+   LINKS
+======================================== */
+
 a {
   color: var(--primary);
   text-decoration: none;
@@ -34,33 +53,27 @@ a {
 a:hover {
   color: var(--primary-dark);
 }
-/* ===== Cards ===== */
-.listing-card {
-  border: none !important;
-  margin-bottom: 2rem;
-  background: var(--surface);
-  border-radius: 0.75rem;
-  box-shadow: var(--shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  overflow: hidden;
-}
 
-.listing-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-}
-.listing-card:focus-within {
+:where(a, button, input, textarea, select):focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
-}
-.card-img-top {
-  border-radius: 0.75rem 0.75rem 0 0;
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
+  border-radius: 0.25rem;
 }
 
-/* ===== Buttons ===== */
+/* Scoped underline protection for listing cards */
+
+.listing-link,
+.listing-link:hover,
+.listing-link:focus,
+.listing-link:active {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ========================================
+   BUTTONS
+======================================== */
+
 .btn-login,
 .add-btn,
 .btn-signup {
@@ -70,12 +83,14 @@ a:hover {
   font-weight: 600;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
 .btn-login:hover,
 .add-btn:hover,
 .btn-signup:hover {
   background-color: var(--primary-dark) !important;
   transform: scale(1.02);
 }
+
 .btn-login:focus,
 .add-btn:focus,
 .btn-signup:focus,
@@ -84,68 +99,37 @@ a:hover {
   outline-offset: 2px;
   box-shadow: 0 0 0 0.2rem rgba(44, 122, 123, 0.25) !important;
 }
-/* Theme button (teal color) */
+
 .btn-theme {
-  background-color: #2b7a78 !important;
+  background-color: var(--primary) !important;
   color: #fff !important;
   border: none !important;
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
   border-radius: 6px;
   padding: 8px 20px;
+  font-weight: 600;
 }
+
 .btn-theme:hover {
-  background-color: #226c68 !important;
-  color: #fff !important;
+  background-color: var(--primary-dark) !important;
+  transform: translateY(-1px);
 }
 
+/* ========================================
+   AUTH PAGES
+======================================== */
 
-/* ===== Login Page ===== */
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 10rem);
-  background: linear-gradient(135deg, #e6fffa, #ffffff);
-  /* soft teal-white gradient */
-  padding: 2rem;
-}
-
-.login-card {
-  background: var(--surface);
-  max-width: 420px;
-  width: 100%;
-  border: 1px solid var(--border);
-  box-shadow: 0 8px 18px rgba(44, 122, 123, 0.15);
-  border-radius: 1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.login-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px rgba(44, 122, 123, 0.25);
-}
-
-.text-theme {
-  color: var(--primary) !important;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.text-theme:hover {
-  color: var(--primary-dark) !important;
-  text-decoration: underline;
-}
-
-/* ===== Signup Page ===== */
+.login-container,
 .signup-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 10rem);
-  background: linear-gradient(135deg, #e6fffa, #ffffff);
   padding: 2rem;
+  background: var(--bg);
 }
 
+.login-card,
 .signup-card {
   background: var(--surface);
   max-width: 420px;
@@ -154,26 +138,122 @@ a:hover {
   box-shadow: 0 8px 18px rgba(44, 122, 123, 0.15);
   border-radius: 1rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 2rem;
 }
 
+.login-card:hover,
 .signup-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 12px 24px rgba(44, 122, 123, 0.25);
 }
 
-/* ===== Input Fields ===== */
-.form-control-lg {
-  border-radius: 0.6rem;
-  border: 1px solid var(--border);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+/* Auth footer text readability */
+
+.login-card p,
+.signup-card p {
+  color: var(--text-muted);
 }
 
-.form-control-lg:focus {
+/* Auth links styling */
+
+.login-card a,
+.signup-card a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-card a:hover,
+.signup-card a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+/* Auth footer text */
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Auth footer link */
+
+.auth-footer a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+/* Dark mode fix */
+
+body.dark-mode .auth-footer {
+  color: var(--text-muted);
+}
+
+body.dark-mode .auth-footer a {
+  color: var(--primary);
+}
+/* Heading visibility */
+
+.login-card h3,
+.signup-card h3,
+.auth-title {
+  color: var(--text);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+/* Theme helper */
+
+.text-theme {
+  color: var(--primary) !important;
+  transition: color 0.3s ease;
+}
+
+.text-theme:hover {
+  color: var(--primary-dark) !important;
+  text-decoration: underline;
+}
+
+/* ========================================
+   FORMS
+======================================== */
+
+.form-label {
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.form-control,
+.form-control-lg,
+.form-select {
+  border-radius: 0.6rem;
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+  background-color: var(--surface);
+  color: var(--text);
+}
+
+.form-control:focus,
+.form-control-lg:focus,
+.form-select:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 0.2rem rgba(44, 122, 123, 0.15);
 }
 
-/* ===== Alerts ===== */
+/* ========================================
+   ALERTS
+======================================== */
+
 .alert {
   box-shadow: var(--shadow);
   border-radius: 0.5rem;
@@ -182,7 +262,11 @@ a:hover {
   max-width: 600px;
   margin: 1rem auto;
 }
-/* ===== Utility Classes ===== */
+
+/* ========================================
+   UTILITIES
+======================================== */
+
 .text-primary {
   color: var(--primary) !important;
 }
@@ -198,7 +282,52 @@ a:hover {
 .shadow-lg {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
-/* ===== Responsive ===== */
+
+/* ========================================
+   DARK MODE TOKENS
+======================================== */
+
+body.dark-mode {
+  --bg: #0a0a0a;
+  --surface: #1a1a1a;
+  --surface-elevated: #242424;
+  --text: #f5f5f5;
+  --text-muted: #a0a0a0;
+  --border: #333333;
+  --primary: #4fd1c5;
+  --primary-dark: #38b2ac;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* ========================================
+   ACCESSIBILITY
+======================================== */
+
+body.dark-mode :where(a, button, input, textarea, select):focus-visible {
+  outline-color: var(--primary);
+}
+
+/* ========================================
+   SELECTION
+======================================== */
+
+::selection {
+  background-color: var(--primary);
+  color: white;
+}
+
+body.dark-mode ::selection {
+  background-color: var(--primary);
+  color: #000;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
 @media (max-width: 576px) {
 
   .login-container,
@@ -209,26 +338,11 @@ a:hover {
   .login-card,
   .signup-card {
     max-width: 100%;
+    padding: 1.5rem;
   }
 
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .card-img-top {
-    height: 180px;
-  }
-
-  .listing-card {
-    margin-bottom: 1.5rem;
-  }
-}
-
-@media (max-width: 992px) {
-  .card-img-top {
-    height: 220px;
   }
 }

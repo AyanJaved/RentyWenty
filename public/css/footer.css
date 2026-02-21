@@ -1,50 +1,55 @@
 .site-footer {
-    background-color: #f0f0f0;
+    background-color: var(--surface);
     padding: 20px 15px;
     text-align: center;
-    font-family: Arial, sans-serif;
     font-size: 14px;
-    color: #333;
+    color: var(--text);
     margin-top: auto;
-    /* Sticky footer if using flexbox */
+    /* works with your flex body layout */
+    border-top: 1px solid var(--border);
 }
 
+/* ===== Social Icons ===== */
 .footer-social {
     margin-bottom: 10px;
 }
 
 .footer-social a {
     margin: 0 10px;
-    color: #004d4d;
+    color: var(--primary);
     font-size: 18px;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .footer-social a:hover {
-    color: #00cccc;
+    color: var(--accent);
+    transform: translateY(-1px);
 }
 
+/* ===== Footer Links ===== */
 .footer-links {
     margin-bottom: 8px;
 }
 
 .footer-links a {
     text-decoration: none;
-    color: #333;
+    color: var(--text);
     margin: 0 5px;
     transition: color 0.3s ease;
 }
 
 .footer-links a:hover {
-    color: #004d4d;
+    color: var(--primary);
     text-decoration: underline;
 }
 
+/* ===== Copyright ===== */
 .footer-copyright {
     font-size: 13px;
-    color: #555;
+    color: var(--text-muted);
 }
 
+/* ===== Responsive ===== */
 @media (max-width: 576px) {
     .site-footer {
         font-size: 12px;
