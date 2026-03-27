@@ -1,29 +1,49 @@
 const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,           // use SSL
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false,  // avoids cert issues on cloud servers
-  },
-});
+// Creates a fresh transporter each time — avoids stale connections on Render
+function createTransporter() {
+  return nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+    connectionTimeout: 10000,   // 10s to connect
+    greetingTimeout: 10000,     // 10s for SMTP greeting
+    socketTimeout: 15000,       // 15s for socket inactivity
+  });
+}
+
+// Retry wrapper — retries up to `retries` times on failure
+async function withRetry(fn, retries = 3, delay = 1500) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      const isLast = attempt === retries;
+      console.error(`Mail attempt ${attempt} failed: ${err.message}`);
+      if (isLast) throw err;
+      await new Promise((res) => setTimeout(res, delay * attempt)); // back-off: 1.5s, 3s
+    }
+  }
+}
 
 /**
  * Send a property inquiry email to the house owner.
- * @param {Object} data - { name, email, phone, message, propertyTitle, ownerEmail }
+ * @param {Object} data - { name, email, phone, timeslot, message, propertyTitle, ownerEmail }
  */
 async function sendInquiryMail(data) {
   const { name, email, phone, timeslot, message, propertyTitle, ownerEmail } = data;
 
   const mailOptions = {
     from: `"Rentywenty Inquiry" <${process.env.MAIL_USER}>`,
-    to: ownerEmail,   // ← dynamically from DB via listing.owner.email
-    replyTo: email,   // ← owner can hit Reply to respond directly to the user
+    to: ownerEmail,
+    replyTo: email,
     subject: `🏠 New Inquiry for "${propertyTitle}" from ${name}`,
     html: `
       <div style="font-family:'Segoe UI',sans-serif;max-width:600px;margin:auto;border:1px solid #e0e0e0;border-radius:12px;overflow:hidden;">
@@ -58,7 +78,6 @@ async function sendInquiryMail(data) {
               <td style="padding:10px 0;color:#1a1a2e;line-height:1.6;">${message}</td>
             </tr>
           </table>
-
           <div style="margin-top:24px;padding:16px;background:#fffbea;border-radius:8px;border-left:4px solid #f5c518;">
             <p style="margin:0;font-size:13px;color:#555;">
               💡 <strong>Tip:</strong> Just hit <em>Reply</em> to this email to respond directly to ${name}.
@@ -72,7 +91,11 @@ async function sendInquiryMail(data) {
     `,
   };
 
-  return transporter.sendMail(mailOptions);
+  // Fresh transporter + retry wrapper
+  await withRetry(() => {
+    const transporter = createTransporter();
+    return transporter.sendMail(mailOptions);
+  });
 }
 
 module.exports = { sendInquiryMail };
