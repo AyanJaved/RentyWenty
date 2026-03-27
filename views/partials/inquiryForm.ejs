@@ -1,0 +1,425 @@
+<!-- ===== INQUIRY FORM PARTIAL ===== -->
+<!-- Usage in show.ejs: include('../partials/inquiryForm', { propertyTitle: listing.title, ownerEmail: listing.owner.email }) -->
+
+<style>
+  .inquiry-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 18px rgba(44, 122, 123, 0.15);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-top: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .inquiry-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(44, 122, 123, 0.25);
+  }
+
+  .inquiry-card h4 {
+    color: var(--text);
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .inquiry-card .inq-sub {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .inq-sub strong {
+    color: var(--primary);
+  }
+
+  .inq-field {
+    margin-bottom: 1rem;
+  }
+
+  .inq-field label {
+    display: block;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .inq-field input,
+  .inq-field textarea {
+    width: 100%;
+    background-color: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 0.6rem;
+    padding: 0.55rem 0.85rem;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .inq-field input::placeholder,
+  .inq-field textarea::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+  }
+
+  .inq-field input:focus,
+  .inq-field textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(44, 122, 123, 0.15);
+  }
+
+
+  .inq-select {
+    width: 100%;
+    background-color: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 0.6rem;
+    padding: 0.55rem 0.85rem;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    appearance: auto;
+  }
+
+  .inq-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(44, 122, 123, 0.15);
+  }
+
+  body.dark-mode .inq-select {
+    background-color: #242424;
+  }
+
+  .inq-field textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .inq-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .inq-btn {
+    width: 100%;
+    margin-top: 0.5rem;
+    background-color: var(--primary) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .inq-btn:hover {
+    background-color: var(--primary-dark) !important;
+    transform: translateY(-1px);
+  }
+
+  .inq-btn:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 0.2rem rgba(44, 122, 123, 0.25) !important;
+  }
+
+  .inq-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .inq-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: inqSpin 0.7s linear infinite;
+    display: none;
+  }
+
+  @keyframes inqSpin { to { transform: rotate(360deg); } }
+
+  /* ── Floating notification ── */
+  .inq-notif {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 9999;
+    min-width: 300px;
+    max-width: 380px;
+    padding: 1rem 1.25rem;
+    border-radius: 0.75rem;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    transform: translateX(120%);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .inq-notif.show {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .inq-notif.success {
+    background: var(--surface);
+    border: 1px solid rgba(44, 122, 123, 0.4);
+    border-left: 4px solid var(--primary);
+    color: var(--text);
+  }
+
+  .inq-notif.error {
+    background: var(--surface);
+    border: 1px solid rgba(229, 62, 62, 0.35);
+    border-left: 4px solid var(--danger);
+    color: var(--text);
+  }
+
+  .inq-notif-icon {
+    font-size: 1.1rem;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .inq-notif.success .inq-notif-icon { color: var(--primary); }
+  .inq-notif.error   .inq-notif-icon { color: var(--danger); }
+
+  .inq-notif-body { flex: 1; }
+  .inq-notif-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+  }
+  .inq-notif-msg {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .inq-notif-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: color 0.2s;
+  }
+  .inq-notif-close:hover { color: var(--text); }
+
+  .inq-notif-progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 3px;
+    border-radius: 0 0 0.75rem 0.75rem;
+    width: 100%;
+    transform-origin: left;
+    animation: none;
+  }
+  .inq-notif.success .inq-notif-progress { background: var(--primary); }
+  .inq-notif.error   .inq-notif-progress { background: var(--danger); }
+  .inq-notif.show .inq-notif-progress {
+    animation: inqProgress 4s linear forwards;
+  }
+  @keyframes inqProgress { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+  @media (max-width: 576px) {
+    .inq-notif {
+      top: auto;
+      bottom: 1rem;
+      right: 1rem;
+      left: 1rem;
+      min-width: unset;
+      max-width: unset;
+      transform: translateY(120%);
+    }
+    .inq-notif.show { transform: translateY(0); }
+  }
+
+  /* Dark mode overrides */
+  body.dark-mode .inquiry-card {
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+  }
+
+  body.dark-mode .inq-field input,
+  body.dark-mode .inq-field textarea {
+    background-color: #242424;
+  }
+
+  body.dark-mode .inq-notif {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  @media (max-width: 576px) {
+    .inq-row { grid-template-columns: 1fr; }
+    .inquiry-card { padding: 1.5rem; }
+  }
+</style>
+
+<div class="inquiry-card">
+  <h4><i class="fas fa-envelope"></i> Contact the Owner</h4>
+  <p class="inq-sub">Send a direct inquiry to <strong><%= listing.owner.username %></strong> about this property</p>
+
+  <!-- Hidden fields passed securely from server -->
+  <input type="hidden" id="inq-propertyTitle" value="<%= propertyTitle %>" />
+  <input type="hidden" id="inq-ownerEmail"    value="<%= ownerEmail %>" />
+
+  <div class="inq-row">
+    <div class="inq-field">
+      <label for="inq-name"><i class="fas fa-user"></i> Full Name <span class="text-danger">*</span></label>
+      <input id="inq-name" type="text" placeholder="Your name" />
+    </div>
+    <div class="inq-field">
+      <label for="inq-phone"><i class="fas fa-phone"></i> Phone <span class="text-danger">*</span></label>
+      <input id="inq-phone" type="tel" placeholder="+91 98765 43210" />
+    </div>
+  </div>
+
+  <div class="inq-field">
+    <label for="inq-email"><i class="fas fa-envelope"></i> Your Email <span class="text-danger">*</span></label>
+    <input id="inq-email" type="email" placeholder="you@example.com" />
+  </div>
+
+  <div class="inq-field">
+    <label for="inq-timeslot"><i class="fas fa-clock"></i> Preferred Call Time <span class="text-danger">*</span></label>
+    <select id="inq-timeslot" class="inq-select">
+      <option value="" disabled selected>Select a time slot (5 PM – 9 PM)</option>
+      <option value="5:00 PM – 5:30 PM">5:00 PM – 5:30 PM</option>
+      <option value="5:30 PM – 6:00 PM">5:30 PM – 6:00 PM</option>
+      <option value="6:00 PM – 6:30 PM">6:00 PM – 6:30 PM</option>
+      <option value="6:30 PM – 7:00 PM">6:30 PM – 7:00 PM</option>
+      <option value="7:00 PM – 7:30 PM">7:00 PM – 7:30 PM</option>
+      <option value="7:30 PM – 8:00 PM">7:30 PM – 8:00 PM</option>
+      <option value="8:00 PM – 8:30 PM">8:00 PM – 8:30 PM</option>
+      <option value="8:30 PM – 9:00 PM">8:30 PM – 9:00 PM</option>
+    </select>
+  </div>
+
+  <div class="inq-field">
+    <label for="inq-message"><i class="fas fa-comment"></i> Message <span class="text-danger">*</span></label>
+    <textarea id="inq-message" placeholder="Hi, I'm interested in this property..."></textarea>
+  </div>
+
+  <button class="inq-btn" id="inq-btn" onclick="submitInquiry()">
+    <i class="fas fa-paper-plane"></i>
+    <span id="inq-btn-text">Send Inquiry</span>
+    <div class="inq-spinner" id="inq-spinner"></div>
+  </button>
+
+  <!-- Floating notification -->
+  <div class="inq-notif" id="inq-notif" role="alert" aria-live="polite">
+    <span class="inq-notif-icon" id="inq-notif-icon"></span>
+    <div class="inq-notif-body">
+      <div class="inq-notif-title" id="inq-notif-title"></div>
+      <div class="inq-notif-msg"   id="inq-notif-msg"></div>
+    </div>
+    <button class="inq-notif-close" onclick="hideInqNotif()" aria-label="Close">&times;</button>
+    <div class="inq-notif-progress" id="inq-notif-progress"></div>
+  </div>
+</div>
+
+<script>
+  async function submitInquiry() {
+    const name          = document.getElementById("inq-name").value.trim();
+    const phone         = document.getElementById("inq-phone").value.trim();
+    const email         = document.getElementById("inq-email").value.trim();
+    const timeslot      = document.getElementById("inq-timeslot").value;
+    const message       = document.getElementById("inq-message").value.trim();
+    const propertyTitle = document.getElementById("inq-propertyTitle").value;
+    const ownerEmail    = document.getElementById("inq-ownerEmail").value;
+    const notif         = document.getElementById("inq-notif");
+    const btn           = document.getElementById("inq-btn");
+    const spinner       = document.getElementById("inq-spinner");
+    const btnText       = document.getElementById("inq-btn-text");
+
+    hideInqNotif();
+
+    if (!name || !email || !phone || !timeslot || !message) {
+      showInqNotif("error", "Missing Fields", "Please fill in all fields before submitting.");
+      return;
+    }
+
+    btn.disabled = true;
+    spinner.style.display = "block";
+    btnText.textContent = "Sending…";
+
+    try {
+      const res = await fetch("/inquiry/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, timeslot, message, propertyTitle, ownerEmail }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        showInqNotif("success", "Inquiry Sent!", "The owner will get back to you at your preferred time.");
+        document.getElementById("inq-name").value    = "";
+        document.getElementById("inq-phone").value   = "";
+        document.getElementById("inq-email").value   = "";
+        document.getElementById("inq-timeslot").value = "";
+        document.getElementById("inq-message").value = "";
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (err) {
+      showInqNotif("error", "Failed to Send", err.message || "Something went wrong. Please try again.");
+    } finally {
+      btn.disabled = false;
+      spinner.style.display = "none";
+      btnText.textContent = "Send Inquiry";
+    }
+  }
+
+  let inqNotifTimer = null;
+
+  function showInqNotif(type, title, msg) {
+    const notif    = document.getElementById("inq-notif");
+    const iconEl   = document.getElementById("inq-notif-icon");
+    const titleEl  = document.getElementById("inq-notif-title");
+    const msgEl    = document.getElementById("inq-notif-msg");
+
+    notif.className = "inq-notif " + type;
+    iconEl.className = "inq-notif-icon fas " + (type === "success" ? "fa-check-circle" : "fa-exclamation-circle");
+    titleEl.textContent = title;
+    msgEl.textContent   = msg;
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => notif.classList.add("show"));
+    });
+
+    // Auto-dismiss after 4s
+    clearTimeout(inqNotifTimer);
+    inqNotifTimer = setTimeout(hideInqNotif, 4000);
+  }
+
+  function hideInqNotif() {
+    const notif = document.getElementById("inq-notif");
+    if (notif) notif.classList.remove("show");
+  }
+</script>

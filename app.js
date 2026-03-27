@@ -18,6 +18,7 @@ const User = require("./models/user.js");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const inquiryRoutes = require("./routes/inquiryRoutes");
 const dbUrl = process.env.ATLAS_DB_URL;
 main()
   .then(() => {
@@ -37,6 +38,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("trust proxy", 1);
 //middleware setup
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(express.json());
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "public")));
@@ -95,6 +97,7 @@ app.get("/", (req, res) => {
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
+app.use("/inquiry", inquiryRoutes);
 // middleWare
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));

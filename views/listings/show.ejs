@@ -119,7 +119,7 @@
         </form>
       </div>
       <% } %>
-
+<%- include('../partials/inquiryForm', { propertyTitle: listing.title, ownerEmail: listing.owner.email }) %>
         <hr class="section-divider">
 
         <!-- Review Section -->
@@ -200,5 +200,5 @@
                           <p>No reviews yet. Be the first to review!</p>
                         </div>
                         <% } %>
-                          </div>
-                          </div>
+    </div>
+  </div>
