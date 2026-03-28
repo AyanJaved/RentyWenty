@@ -1,38 +1,6 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-// Creates a fresh transporter each time — avoids stale connections on Render
-function createTransporter() {
-  return nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,           // 465 is blocked on Render — 587 is open
-    secure: false,       // false for STARTTLS (upgrades after connect)
-    auth: {
-      user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false,
-      ciphers: "SSLv3",
-    },
-    connectionTimeout: 15000,
-    greetingTimeout: 15000,
-    socketTimeout: 20000,
-  });
-}
-
-// Retry wrapper — retries up to `retries` times on failure
-async function withRetry(fn, retries = 3, delay = 1500) {
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      return await fn();
-    } catch (err) {
-      const isLast = attempt === retries;
-      console.error(`Mail attempt ${attempt} failed: ${err.message}`);
-      if (isLast) throw err;
-      await new Promise((res) => setTimeout(res, delay * attempt)); // back-off: 1.5s, 3s
-    }
-  }
-}
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 /**
  * Send a property inquiry email to the house owner.
@@ -41,8 +9,8 @@ async function withRetry(fn, retries = 3, delay = 1500) {
 async function sendInquiryMail(data) {
   const { name, email, phone, timeslot, message, propertyTitle, ownerEmail } = data;
 
-  const mailOptions = {
-    from: `"Rentywenty Inquiry" <${process.env.MAIL_USER}>`,
+  const { error } = await resend.emails.send({
+    from: "Rentywenty <onboarding@resend.dev>", // use this until you verify a domain
     to: ownerEmail,
     replyTo: email,
     subject: `🏠 New Inquiry for "${propertyTitle}" from ${name}`,
@@ -90,13 +58,12 @@ async function sendInquiryMail(data) {
         </div>
       </div>
     `,
-  };
-
-  // Fresh transporter + retry wrapper
-  await withRetry(() => {
-    const transporter = createTransporter();
-    return transporter.sendMail(mailOptions);
   });
+
+  if (error) {
+    console.error("Resend error:", error);
+    throw new Error(error.message || "Failed to send email.");
+  }
 }
 
 module.exports = { sendInquiryMail };
