@@ -1,10 +1,10 @@
 <!-- ===== INQUIRY FORM PARTIAL ===== -->
-<!-- Usage in show.ejs: <%- include('../partials/inquiryForm', { propertyTitle: listing.title, ownerEmail: listing.owner.email }) %> -->
+<!-- Usage in show.ejs: include('../partials/inquiryForm', { propertyTitle: listing.title, ownerEmail: listing.owner.email }) -->
 
 <!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  emailjs.init("3mgGebMEU7__fzVJM");
+  emailjs.init("YOUR_PUBLIC_KEY"); // 👈 Replace with your EmailJS public key
 </script>
 
 <style>
@@ -343,8 +343,8 @@
 
     try {
       await emailjs.send(
-        "service_1b3trus",
-        "template_5dc5bo4",
+        "YOUR_SERVICE_ID",    // 👈 Replace with your EmailJS Service ID
+        "YOUR_TEMPLATE_ID",   // 👈 Replace with your EmailJS Template ID
         templateParams
       );
 
