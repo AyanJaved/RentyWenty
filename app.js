@@ -18,7 +18,6 @@ const User = require("./models/user.js");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
-const inquiryRoutes = require("./routes/inquiryRoutes");
 const dbUrl = process.env.ATLAS_DB_URL;
 main()
   .then(() => {
