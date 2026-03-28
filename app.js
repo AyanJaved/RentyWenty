@@ -97,7 +97,6 @@ app.get("/", (req, res) => {
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
-app.use("/inquiry", inquiryRoutes);
 // middleWare
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));

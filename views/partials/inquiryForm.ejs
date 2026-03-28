@@ -1,5 +1,11 @@
 <!-- ===== INQUIRY FORM PARTIAL ===== -->
-<!-- Usage in show.ejs: include('../partials/inquiryForm', { propertyTitle: listing.title, ownerEmail: listing.owner.email }) -->
+<!-- Usage in show.ejs: <%- include('../partials/inquiryForm', { propertyTitle: listing.title, ownerEmail: listing.owner.email }) %> -->
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  emailjs.init("3mgGebMEU7__fzVJM");
+</script>
 
 <style>
   .inquiry-card {
@@ -70,7 +76,6 @@
     border-color: var(--primary);
     box-shadow: 0 0 0 0.2rem rgba(44, 122, 123, 0.15);
   }
-
 
   .inq-select {
     width: 100%;
@@ -155,7 +160,7 @@
 
   @keyframes inqSpin { to { transform: rotate(360deg); } }
 
-  /* ── Floating notification ── */
+  /* Floating notification */
   .inq-notif {
     position: fixed;
     top: 1.5rem;
@@ -198,86 +203,44 @@
     color: var(--text);
   }
 
-  .inq-notif-icon {
-    font-size: 1.1rem;
-    margin-top: 1px;
-    flex-shrink: 0;
-  }
-
+  .inq-notif-icon { font-size: 1.1rem; margin-top: 1px; flex-shrink: 0; }
   .inq-notif.success .inq-notif-icon { color: var(--primary); }
   .inq-notif.error   .inq-notif-icon { color: var(--danger); }
-
   .inq-notif-body { flex: 1; }
-  .inq-notif-title {
-    font-weight: 700;
-    font-size: 0.9rem;
-    margin-bottom: 2px;
-  }
-  .inq-notif-msg {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    line-height: 1.4;
-  }
+  .inq-notif-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 2px; }
+  .inq-notif-msg   { font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; }
 
   .inq-notif-close {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 0;
-    line-height: 1;
-    flex-shrink: 0;
-    transition: color 0.2s;
+    background: none; border: none; color: var(--text-muted);
+    cursor: pointer; font-size: 1rem; padding: 0; line-height: 1;
+    flex-shrink: 0; transition: color 0.2s;
   }
   .inq-notif-close:hover { color: var(--text); }
 
   .inq-notif-progress {
-    position: absolute;
-    bottom: 0; left: 0;
-    height: 3px;
-    border-radius: 0 0 0.75rem 0.75rem;
-    width: 100%;
-    transform-origin: left;
-    animation: none;
+    position: absolute; bottom: 0; left: 0;
+    height: 3px; border-radius: 0 0 0.75rem 0.75rem;
+    width: 100%; transform-origin: left; animation: none;
   }
   .inq-notif.success .inq-notif-progress { background: var(--primary); }
   .inq-notif.error   .inq-notif-progress { background: var(--danger); }
-  .inq-notif.show .inq-notif-progress {
-    animation: inqProgress 4s linear forwards;
-  }
+  .inq-notif.show .inq-notif-progress { animation: inqProgress 4s linear forwards; }
   @keyframes inqProgress { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 
-  @media (max-width: 576px) {
-    .inq-notif {
-      top: auto;
-      bottom: 1rem;
-      right: 1rem;
-      left: 1rem;
-      min-width: unset;
-      max-width: unset;
-      transform: translateY(120%);
-    }
-    .inq-notif.show { transform: translateY(0); }
-  }
-
-  /* Dark mode overrides */
-  body.dark-mode .inquiry-card {
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
-  }
-
+  body.dark-mode .inquiry-card  { box-shadow: 0 8px 18px rgba(0,0,0,0.35); }
   body.dark-mode .inq-field input,
-  body.dark-mode .inq-field textarea {
-    background-color: #242424;
-  }
-
-  body.dark-mode .inq-notif {
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  }
+  body.dark-mode .inq-field textarea { background-color: #242424; }
+  body.dark-mode .inq-notif { box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
 
   @media (max-width: 576px) {
     .inq-row { grid-template-columns: 1fr; }
     .inquiry-card { padding: 1.5rem; }
+    .inq-notif {
+      top: auto; bottom: 1rem; right: 1rem; left: 1rem;
+      min-width: unset; max-width: unset;
+      transform: translateY(120%);
+    }
+    .inq-notif.show { transform: translateY(0); }
   }
 </style>
 
@@ -285,7 +248,7 @@
   <h4><i class="fas fa-envelope"></i> Contact the Owner</h4>
   <p class="inq-sub">Send a direct inquiry to <strong><%= listing.owner.username %></strong> about this property</p>
 
-  <!-- Hidden fields passed securely from server -->
+  <!-- Hidden fields from server -->
   <input type="hidden" id="inq-propertyTitle" value="<%= propertyTitle %>" />
   <input type="hidden" id="inq-ownerEmail"    value="<%= ownerEmail %>" />
 
@@ -339,7 +302,7 @@
       <div class="inq-notif-msg"   id="inq-notif-msg"></div>
     </div>
     <button class="inq-notif-close" onclick="hideInqNotif()" aria-label="Close">&times;</button>
-    <div class="inq-notif-progress" id="inq-notif-progress"></div>
+    <div class="inq-notif-progress"></div>
   </div>
 </div>
 
@@ -352,7 +315,6 @@
     const message       = document.getElementById("inq-message").value.trim();
     const propertyTitle = document.getElementById("inq-propertyTitle").value;
     const ownerEmail    = document.getElementById("inq-ownerEmail").value;
-    const notif         = document.getElementById("inq-notif");
     const btn           = document.getElementById("inq-btn");
     const spinner       = document.getElementById("inq-spinner");
     const btnText       = document.getElementById("inq-btn-text");
@@ -368,26 +330,34 @@
     spinner.style.display = "block";
     btnText.textContent = "Sending…";
 
-    try {
-      const res = await fetch("/inquiry/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, timeslot, message, propertyTitle, ownerEmail }),
-      });
-      const data = await res.json();
+    // EmailJS template parameters — must match your template variables
+    const templateParams = {
+      from_name:      name,
+      from_email:     email,
+      phone:          phone,
+      timeslot:       timeslot,
+      message:        message,
+      property_title: propertyTitle,
+      owner_email:    ownerEmail,
+    };
 
-      if (data.success) {
-        showInqNotif("success", "Inquiry Sent!", "The owner will get back to you at your preferred time.");
-        document.getElementById("inq-name").value    = "";
-        document.getElementById("inq-phone").value   = "";
-        document.getElementById("inq-email").value   = "";
-        document.getElementById("inq-timeslot").value = "";
-        document.getElementById("inq-message").value = "";
-      } else {
-        throw new Error(data.error);
-      }
+    try {
+      await emailjs.send(
+        "service_1b3trus",
+        "template_5dc5bo4",
+        templateParams
+      );
+
+      showInqNotif("success", "Inquiry Sent!", "The owner will get back to you at your preferred time.");
+      document.getElementById("inq-name").value     = "";
+      document.getElementById("inq-phone").value    = "";
+      document.getElementById("inq-email").value    = "";
+      document.getElementById("inq-timeslot").value = "";
+      document.getElementById("inq-message").value  = "";
+
     } catch (err) {
-      showInqNotif("error", "Failed to Send", err.message || "Something went wrong. Please try again.");
+      console.error("EmailJS error:", err);
+      showInqNotif("error", "Failed to Send", "Something went wrong. Please try again.");
     } finally {
       btn.disabled = false;
       spinner.style.display = "none";
@@ -398,22 +368,20 @@
   let inqNotifTimer = null;
 
   function showInqNotif(type, title, msg) {
-    const notif    = document.getElementById("inq-notif");
-    const iconEl   = document.getElementById("inq-notif-icon");
-    const titleEl  = document.getElementById("inq-notif-title");
-    const msgEl    = document.getElementById("inq-notif-msg");
+    const notif   = document.getElementById("inq-notif");
+    const iconEl  = document.getElementById("inq-notif-icon");
+    const titleEl = document.getElementById("inq-notif-title");
+    const msgEl   = document.getElementById("inq-notif-msg");
 
     notif.className = "inq-notif " + type;
     iconEl.className = "inq-notif-icon fas " + (type === "success" ? "fa-check-circle" : "fa-exclamation-circle");
     titleEl.textContent = title;
     msgEl.textContent   = msg;
 
-    // Trigger animation
     requestAnimationFrame(() => {
       requestAnimationFrame(() => notif.classList.add("show"));
     });
 
-    // Auto-dismiss after 4s
     clearTimeout(inqNotifTimer);
     inqNotifTimer = setTimeout(hideInqNotif, 4000);
   }
