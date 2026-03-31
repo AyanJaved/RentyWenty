@@ -86,6 +86,9 @@ app.use((req, res, next) => {
   res.locals.currUser = req.user; //used in navbar for logged in info
   res.locals.search = req.query.search || "";
   res.locals.path = req.path;
+  res.locals.EMAILJS_PUBLIC_KEY= process.env.EMAILJS_PUBLIC_KEY;
+  res.locals.EMAILJS_SERVICE_ID= process.env.EMAILJS_SERVICE_ID;
+  res.locals.EMAILJS_TEMPLATE_ID= process.env.EMAILJS_TEMPLATE_ID;
   next();
 });
 

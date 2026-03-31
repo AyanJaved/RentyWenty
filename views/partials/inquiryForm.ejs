@@ -4,7 +4,10 @@
 <!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  emailjs.init("YOUR_PUBLIC_KEY"); // 👈 Replace with your EmailJS public key
+  emailjs.init("3mgGebMEU7__fzVJM");
+</script>
+<script>
+  // Keys are injected via hidden fields below — see id="ejs-*"
 </script>
 
 <style>
@@ -249,8 +252,8 @@
   <p class="inq-sub">Send a direct inquiry to <strong><%= listing.owner.username %></strong> about this property</p>
 
   <!-- Hidden fields from server -->
-  <input type="hidden" id="inq-propertyTitle" value="<%= propertyTitle %>" />
-  <input type="hidden" id="inq-ownerEmail"    value="<%= ownerEmail %>" />
+  <input type="hidden" id="inq-propertyTitle"    value="<%= propertyTitle %>" />
+  <input type="hidden" id="inq-ownerEmail"        value="<%= ownerEmail %>" />
 
   <div class="inq-row">
     <div class="inq-field">
@@ -286,6 +289,7 @@
   <div class="inq-field">
     <label for="inq-date"><i class="fas fa-calendar-alt"></i> Preferred Date <span class="text-danger">*</span></label>
     <input id="inq-date" type="date" />
+    <small style="color: var(--text-muted); font-size: 0.78rem;"><i class="fas fa-info-circle"></i> Available dates: today up to 10 days ahead</small>
   </div>
 
   <div class="inq-field">
@@ -350,8 +354,8 @@
 
     try {
       await emailjs.send(
-        "YOUR_SERVICE_ID",    // 👈 Replace with your EmailJS Service ID
-        "YOUR_TEMPLATE_ID",   // 👈 Replace with your EmailJS Template ID
+        "service_1b3trus",
+        "template_5dc5bo4",
         templateParams
       );
 
@@ -363,8 +367,10 @@
       document.getElementById("inq-message").value  = "";
 
     } catch (err) {
-      console.error("EmailJS error:", err);
-      showInqNotif("error", "Failed to Send", "Something went wrong. Please try again.");
+      console.error("EmailJS error status:", err.status);
+      console.error("EmailJS error text:", err.text);
+      console.error("EmailJS full error:", JSON.stringify(err));
+      showInqNotif("error", "Failed to Send", "Error " + (err.status || "") + ": " + (err.text || "Something went wrong."));
     } finally {
       btn.disabled = false;
       spinner.style.display = "none";
@@ -397,4 +403,22 @@
     const notif = document.getElementById("inq-notif");
     if (notif) notif.classList.remove("show");
   }
+</script>
+
+<script>
+  // Date restriction — placed after DOM so #inq-date exists
+  (function() {
+    const dateInput = document.getElementById("inq-date");
+    if (!dateInput) return;
+
+    const today   = new Date();
+    const maxDate = new Date();
+    maxDate.setDate(today.getDate() + 10);
+
+    const pad = (n) => String(n).padStart(2, "0");
+    const fmt = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+
+    dateInput.min = fmt(today);
+    dateInput.max = fmt(maxDate);
+  })();
 </script>
