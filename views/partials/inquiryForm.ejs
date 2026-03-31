@@ -4,7 +4,7 @@
 <!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  emailjs.init("3mgGebMEU7__fzVJM");
+  emailjs.init("YOUR_PUBLIC_KEY"); // 👈 Replace with your EmailJS public key
 </script>
 
 <style>
@@ -284,6 +284,11 @@
   </div>
 
   <div class="inq-field">
+    <label for="inq-date"><i class="fas fa-calendar-alt"></i> Preferred Date <span class="text-danger">*</span></label>
+    <input id="inq-date" type="date" />
+  </div>
+
+  <div class="inq-field">
     <label for="inq-message"><i class="fas fa-comment"></i> Message <span class="text-danger">*</span></label>
     <textarea id="inq-message" placeholder="Hi, I'm interested in this property..."></textarea>
   </div>
@@ -312,6 +317,7 @@
     const phone         = document.getElementById("inq-phone").value.trim();
     const email         = document.getElementById("inq-email").value.trim();
     const timeslot      = document.getElementById("inq-timeslot").value;
+    const date          = document.getElementById("inq-date").value;
     const message       = document.getElementById("inq-message").value.trim();
     const propertyTitle = document.getElementById("inq-propertyTitle").value;
     const ownerEmail    = document.getElementById("inq-ownerEmail").value;
@@ -321,7 +327,7 @@
 
     hideInqNotif();
 
-    if (!name || !email || !phone || !timeslot || !message) {
+    if (!name || !email || !phone || !timeslot || !date || !message) {
       showInqNotif("error", "Missing Fields", "Please fill in all fields before submitting.");
       return;
     }
@@ -335,6 +341,7 @@
       from_name:      name,
       from_email:     email,
       phone:          phone,
+      date:           date,
       timeslot:       timeslot,
       message:        message,
       property_title: propertyTitle,
@@ -343,8 +350,8 @@
 
     try {
       await emailjs.send(
-        "service_1b3trus",
-        "template_5dc5bo4",
+        "YOUR_SERVICE_ID",    // 👈 Replace with your EmailJS Service ID
+        "YOUR_TEMPLATE_ID",   // 👈 Replace with your EmailJS Template ID
         templateParams
       );
 
